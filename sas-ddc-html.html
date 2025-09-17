@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>DDC Formular</title>
+  <script>
+    function handleSubmit() {
+      const radios = document.getElementsByName("antwort");
+      let selected = null;
+      for (const radio of radios) {
+        if (radio.checked) {
+          selected = radio.value;
+          break;
+        }
+      }
+      if (selected) {
+        alert("Sie haben '" + selected + "' gewählt.");
+      } else {
+        alert("Bitte wählen Sie Ja oder Nein.");
+      }
+    }
+  </script>
+</head>
+<body>
+  <h3>Bitte wählen Sie:</h3>
+  <label><input type="radio" name="antwort" value="Ja"> Ja</label><br>
+  <label><input type="radio" name="antwort" value="Nein"> Nein</label><br><br>
+  <button onclick="handleSubmit()">Absenden</button>
+</body>
+</html>
