@@ -5,9 +5,9 @@
   <title>DDC Formular</title>
   <script>
     async function getAccessToken() {
-      const clientId = 'DEIN_CLIENT_ID';
-      const clientSecret = 'DEIN_CLIENT_SECRET';
-      const tokenUrl = 'https://<viya-host>/SASLogon/oauth/token';
+      const clientId = 'userid';
+      const clientSecret = 'password';
+      const tokenUrl = 'https://d104955.rqsjulapp-azure-nginx-6af01e96.unx.sas.com/SASLogon/oauth/token';
 
       const response = await fetch(tokenUrl, {
         method: 'POST',
@@ -28,7 +28,7 @@
 
     async function startSasJob(answer) {
       const token = await getAccessToken();
-      const jobUrl = 'https://<viya-host>/jobExecution/jobs/<job-id>/execute';
+      const jobUrl = 'https://d104955.rqsjulapp-azure-nginx-6af01e96.unx.sas.com/jobExecution/jobs/*TOADD';
 
       const payload = {
         arguments: {
