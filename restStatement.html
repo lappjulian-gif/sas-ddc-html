@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>DDC Formular</title>
+  <script>
+    async function getAccessToken() {
+      const clientId = 'DEIN_CLIENT_ID';
+      const clientSecret = 'DEIN_CLIENT_SECRET';
+      const tokenUrl = 'https://<viya-host>/SASLogon/oauth/token';
+
+      const response = await fetch(tokenUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Basic ' + btoa(`${clientId}:${clientSecret}`),
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: 'grant_type=client_credentials'
+      });
+
+      if (!response.ok) {
+        throw new Error('Token konnte nicht geholt werden');
+      }
+
+      const data = await response.json();
+      return data.access_token;
+    }
+
+    async function startSasJob(answer) {
+      const token = await getAccessToken();
+      const jobUrl = 'https://<viya-host>/jobExecution/jobs/<job-id>/execute';
+
+      const payload = {
+        arguments: {
+          Answer: answer
+        }
+      };
+
+      const response = await fetch(jobUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (!response.ok) {
+        throw new Error('Job konnte nicht gestartet werden');
+      }
+
+      const result = await response.json();
+      console.log('Job gestartet:', result);
+      alert('Job erfolgreich gestartet!');
+    }
+
+    async function handleSubmit() {
+      const radios = document.getElementsByName("antwort");
+      let selected = null;
+      for (const radio of radios) {
+        if (radio.checked) {
+          selected = radio.value;
+          break;
+        }
+      }
+
+      if (!selected) {
+        alert("Bitte wählen Sie Ja oder Nein.");
+        return;
+      }
+
+      try {
+        await startSasJob(selected);
+      } catch (error) {
+        console.error(error);
+        alert("Fehler beim Starten des Jobs.");
+      }
+    }
+  </script>
+</head>
+<body>
+  <h3>Bitte wählen Sie:</h3>
+  <label><input type="radio" name="antwort" value="Ja"> Ja</label><br>
+  <label><input type="radio" name="antwort" value="Nein"> Nein</label><br><br>
+  <button onclick="handleSubmit()">Absenden</button>
+</body>
+</html>
